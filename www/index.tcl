@@ -70,35 +70,3 @@ db_multirow -extend { item_url cancel_url delete_url completed_url status_text d
     set cancel_url "todo-update-item?[export_vars -url {item_id new_status return_url}]"
     }
 }
-
-ad_form -name todo_item_form -export {user_id package_id} -mode $form_mode -form {
-item_id:key
-{title:text {label "Task Title"} }
-{description:text(textarea),optional {label "Description"}}
-{due_date:date(date) {label "Due Date: "} {format {MONTH DD YYYY} } }
-{status:text(select) {label "Status"}
- {options { {"Pending" "p"}
- {"Complete" "c"}
- {"Canceled" "x" }
- } }
-}
-} -select_query_name select_task \
--new_data {
-    set context_id [ad_conn package_id]
-    db_exec_plsql new_task {}
-
-    permission::grant -party_id $user_id \
-    -object_id $item_id \
-    -privilege "general_comments_create"
-    
-} -edit_data {
- # update the information on our table
- db_dml update_task {}
- # update the last modified information on the object
- db_exec_plsql to_do_list_obj_item_object_update {
- select acs_object__update_last_modified(:item_id,:user_id,:ip_address)
- }
-} -after_submit {
-    ad_returnredirect index
-    ad_script_abort
-}

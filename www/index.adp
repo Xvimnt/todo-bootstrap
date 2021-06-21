@@ -1,5 +1,4 @@
 <master src="master">
-
 <div class="row">
     <div class="col-md-12">
         <table class="table" id="myTable" style="width: 100%;">
@@ -47,13 +46,14 @@
 </div>
 <div class="row"> 
     <div class="col-md-12 text-center">
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#staticBackdrop">
-          Add New Task
-        </button>
+         <!-- Button trigger modal -->
+            <button type="button" class="btn btn-warning" onclick="new_task()">
+              Add New Task
+            </button>
     </div>
 </div>
-<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<!-- Modal -->
+<div id="dialog" class="modal">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -62,66 +62,68 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <formtemplate id="todo_item_form">
-            <div class="row">
-                <div class="col-md-6">
-                    <label for="title">Task Title: </label>
-                    <formwidget id="title" class="form-control">
-                    <formerror id="title" type="no_special_characters">
-                        The title may not not contain special characters such as 
-                        @, $, !, %, & or #.
-                    </formerror>
-                </div>
-                <div class="col-md-6">
-                    <label for="status">Status: </label>
-                    <formwidget id="status" class="form-control">
-                    <formerror id="status" type="no_special_characters">
-                        The title may not not contain special characters such as 
-                        @, $, !, %, & or #.
-                    </formerror>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <label for="description">Description: </label>
-                    <formwidget id="description" class="form-control">
-                    <formerror id="description" type="no_special_characters">
-                        The description may not not contain special characters such as 
-                        @, $, !, %, & or #.
-                    </formerror>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <label for="due_date">Due Date: </label>
-                    <formwidget id="due_date" class="form-control">
-                    <formerror id="due_date" type="no_special_characters">
-                        The description may not not contain special characters such as 
-                        @, $, !, %, & or #.
-                    </formerror>
-                </div>
-            </div>
-            <hr>
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <button class="btn btn-warning" onclick="save_task()">Save</button>
-                </div>
-            </div>
-        </formtemplate>
+      <div class="modal-body"  id="dialog-body">
+        
       </div>
     </div>
   </div>
 </div>
-<blockquote>
-  <slave>
-</blockquote>
+
 <script>
     $(document).ready(function() {
         $('#myTable').DataTable({
             responsive: true
         });
     });
+
+    function new_task() {
+        $( "#dialog" ).dialog({
+           open: function(event, ui) {
+             $('#dialog-body').load('todo-ae', function() {
+               // alert('Load was performed.');
+             });
+           },
+           close: false,
+        });
+    }
+
+    function complete_item(item_id) {
+        $.ajax({
+            type: "POST",
+            url: "todo-update-item.tcl",
+            data: {item_id: item_id, new_status: 'c'},
+            success: function (data, textStatus, jqXHR) {
+                alert("success");
+                setTimeout(function() { 
+                    Swal.fire("success","success","success")
+                    window.location.reload();
+                }, 1000);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert("Error Loading: "+errorThrown)
+            },
+            always: function (jqXHR, textStatus, errorThrown) {
+                alert("always Loading: " + jqXHR)
+            },
+        });
+    }
+
+    function cancel_item(item_id) {
+        $.ajax({
+            type: "POST",
+            url: "todo-update-item.tcl",
+            data: {item_id: item_id, new_status: 'x'},
+            success: function (data, textStatus, jqXHR) {
+                setTimeout(function() { 
+                    Swal.fire("success","success","success")
+                    window.location.reload();
+                }, 1000);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert("Error Loading: "+errorThrown)
+            }
+        });
+    } 
 
     function delete_item( item_id ) {
         Swal.fire({
@@ -142,10 +144,7 @@
             url: "todo-delete.tcl",
             data: {item_id: item_id},
             success: function (data, textStatus, jqXHR) {
-                setTimeout(function() { 
-                    Swal.fire("success","success","success")
-                    window.location.reload();
-                }, 1000);
+                
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 alert("Error Loading: "+errorThrown)
@@ -153,25 +152,11 @@
         });
     }
 
-    function save_task() {
-        $.ajax({
-            type: "POST",
-            url: "todo-create.tcl",
-            data: {
-                status: $("#status").val(),
-                description: $("#description").val(),
-                item_id: "@item_id@",
-                due_date: $("#due_date").val(),
-            },
-            success: function (data, textStatus, jqXHR) {
-                setTimeout(function(){
-                    Swal.fire("success","success","success")
-                    window.location.reload();
-                }, 1000);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                alert("Error Loading: "+errorThrown)
-            }
-        });
-    }
+    $( "#openwindow" ).dialog({
+    open: function(event, ui) {
+   $('#divInDialog').load('test.html', function() {
+     alert('Load was performed.');
+   });
+  }
+});
 </script>

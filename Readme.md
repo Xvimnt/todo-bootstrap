@@ -1,3 +1,3 @@
-# This is the bootstrap tutorial using gitflow
+# Use of bootstrap in OpenACS 
 ## by: Javier Monterroso
-### June 2021
+June 2021
