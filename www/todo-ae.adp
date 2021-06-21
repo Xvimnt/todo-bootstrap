@@ -1,15 +1,3 @@
-<master src="index">
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Add new task</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
         <formtemplate id="todo_item_form">
             <div class="row">
                 <div class="col-md-6">
@@ -61,31 +49,3 @@
         <p>
         @comments_html;noquote@
         </if>
-      </div>
-    </div>
-  </div>
-</div>
-<script type="text/javascript">
-    function save_task(){
-        alert($("#status").val() + "," + $("#description").val()+ "," +$("#due_date").day.val() + "," + "@item_id@");
-        $.ajax({
-            type: "POST",
-            url: "todo-ae.tcl",
-            data: {
-                status: $("#status").val(),
-                description: $("#description").val(),
-                item_id: "@item_id@",
-                due_date: $("#due_date").val(),
-            },
-            success: function (data, textStatus, jqXHR) {
-                setTimeout(function(){
-                    Swal.fire("success","success","success")
-                    window.location.reload();
-                }, 1000);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                alert("Error Loading: "+errorThrown)
-            }
-        });
-    }
-</script>

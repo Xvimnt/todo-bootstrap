@@ -58,4 +58,4 @@ if {
             return_url [util_get_current_url]}
             }]"
             set comments_html [general_comments_get_comments -print_content_p 1 $item_id [util_get_current_url]]
-   }
+        }
