@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<queryset>
+   <fullquery name="new_task">
+      <querytext>
+        select todo_item__new (
+            :item_id,
+            :title,
+            :description,
+            :status,
+            :user_id,
+            to_date(:due_date, 'YYYY MM DD'),
+            :ip_address,
+            :context_id
+        );
+      </querytext>
+   </fullquery>
+</queryset>
